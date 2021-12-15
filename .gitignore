@@ -198,6 +198,6 @@ ZrchWarehouse/.temp/*ß
 
 *.env
 *.zip
-*.vscode
+*.vscode/*
 *.jpg
 
