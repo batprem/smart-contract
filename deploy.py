@@ -5,6 +5,8 @@ from solcx import compile_standard
 import json
 from web3 import Web3
 
+from typing import List
+
 
 load_dotenv(override=True)
 
@@ -51,7 +53,7 @@ def get_bytecode(compiled_sol: dict, contract_file: str, contract_name: str) -> 
     ]
 
 
-def get_abi(compiled_sol: dict, contract_file: str, contract_name: str) -> dict:
+def get_abi(compiled_sol: dict, contract_file: str, contract_name: str) -> List[dict]:
     return compiled_sol["contracts"][CONTRACT_FILE][CONTRACT_NAME]["abi"]
 
 
