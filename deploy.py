@@ -17,33 +17,52 @@ CHAIN_ID = 1337
 OWNER_ADDRESS = os.environ["OWNER_ADDRESS"]
 OWNER_PRIVATE_KEY = os.environ["OWNER_PRIVATE_KEY"]
 
+"""
+Complie contract
+"""
 
-with open(CONTRACT_FILE, "r") as file:
-    simple_storage_file = file.read()
 
-compiled_sol = compile_standard(
-    {
-        "language": "Solidity",
-        "sources": {"./contracts/SimpleStorage.sol": {"content": simple_storage_file}},
-        "settings": {
-            "outputSelection": {
-                "*": {"*": ["abi", "metadata", "evm.bytecode", "evm.sourceMap"]}
-            }
+def read_a_contract_file(contract_file: str) -> str:
+    with open(contract_file, "r") as file:
+        content = file.read()
+    return content
+
+
+def compile_contract(contract_content: str) -> dict:
+    compiled_sol = compile_standard(
+        {
+            "language": "Solidity",
+            "sources": {"./contracts/SimpleStorage.sol": {"content": contract_content}},
+            "settings": {
+                "outputSelection": {
+                    "*": {"*": ["abi", "metadata", "evm.bytecode", "evm.sourceMap"]}
+                }
+            },
         },
-    },
-    solc_version="0.8.0",
-)
+        solc_version="0.8.0",
+    )
+    return compiled_sol
 
-with open("results.json", "w") as file:
-    json.dump(compiled_sol, file)
+
+def get_bytecode(compiled_sol: dict, contract_file: str, contract_name: str) -> str:
+    # Get bytecode
+    return compiled_sol["contracts"][CONTRACT_FILE][CONTRACT_NAME]["evm"]["bytecode"][
+        "object"
+    ]
+
+
+def get_abi(compiled_sol: dict, contract_file: str, contract_name: str) -> dict:
+    return compiled_sol["contracts"][CONTRACT_FILE][CONTRACT_NAME]["abi"]
+
+
+simple_storage_contract = read_a_contract_file(CONTRACT_FILE)
+compiled_sol = compile_contract(simple_storage_contract)
 
 # Get bytecode
-bytecode = compiled_sol["contracts"][CONTRACT_FILE][CONTRACT_NAME]["evm"]["bytecode"][
-    "object"
-]
+bytecode = get_bytecode(compiled_sol, CONTRACT_FILE, CONTRACT_NAME)
 
 # Get ABI
-abi = compiled_sol["contracts"][CONTRACT_FILE][CONTRACT_NAME]["abi"]
+abi = get_abi(compiled_sol, CONTRACT_FILE, CONTRACT_NAME)
 
 # Connecto ganache
 w3 = Web3(Web3.HTTPProvider(RPC_URI))
@@ -87,10 +106,9 @@ print("Before retrieve")
 retrieve = simple_storage.functions.retrieve()
 output = retrieve.call()
 print(output)
-
 # Initial value of favorite number
 # Call
-print(simple_storage.functions.store(15).call())
+simple_storage.functions.store(15).call()
 
 print("After retrieve")
 
