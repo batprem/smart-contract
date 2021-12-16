@@ -201,3 +201,9 @@ ZrchWarehouse/.temp/*ß
 *.vscode/*
 *.jpg
 
+__pycache__
+.env
+.history
+.hypothesis/
+build/
+reports/
