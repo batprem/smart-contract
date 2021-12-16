@@ -6,13 +6,14 @@ import json
 from web3 import Web3
 
 
+load_dotenv(override=True)
+
 CONTRACT_FILE = "./contracts/SimpleStorage.sol"
 CONTRACT_NAME = "SimpleStorage"
 
 RPC_URI = "http://127.0.0.1:7545"
 CHAIN_ID = 1337
 
-load_dotenv(override=True)
 OWNER_ADDRESS = os.environ["OWNER_ADDRESS"]
 OWNER_PRIVATE_KEY = os.environ["OWNER_PRIVATE_KEY"]
 
