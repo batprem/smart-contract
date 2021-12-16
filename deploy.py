@@ -13,8 +13,8 @@ load_dotenv(override=True)
 CONTRACT_FILE = "./contracts/SimpleStorage.sol"
 CONTRACT_NAME = "SimpleStorage"
 
-RPC_URI = "http://127.0.0.1:7545"
-CHAIN_ID = 1337
+RPC_URI = os.environ["RPC_URI"]
+CHAIN_ID = 4
 
 OWNER_ADDRESS = os.environ["OWNER_ADDRESS"]
 OWNER_PRIVATE_KEY = os.environ["OWNER_PRIVATE_KEY"]
@@ -24,6 +24,10 @@ Complie contract
 """
 
 
+class ContractCompiler:
+    pass
+
+
 def read_a_contract_file(contract_file: str) -> str:
     with open(contract_file, "r") as file:
         content = file.read()
@@ -31,6 +35,9 @@ def read_a_contract_file(contract_file: str) -> str:
 
 
 def compile_contract(contract_content: str) -> dict:
+    """
+    Complie contact
+    """
     compiled_sol = compile_standard(
         {
             "language": "Solidity",
@@ -47,15 +54,24 @@ def compile_contract(contract_content: str) -> dict:
 
 
 def get_bytecode(compiled_sol: dict, contract_file: str, contract_name: str) -> str:
-    # Get bytecode
+    """
+    Get bytecode
+    """
     return compiled_sol["contracts"][CONTRACT_FILE][CONTRACT_NAME]["evm"]["bytecode"][
         "object"
     ]
 
 
 def get_abi(compiled_sol: dict, contract_file: str, contract_name: str) -> List[dict]:
+    """
+    Get ABI
+    """
     return compiled_sol["contracts"][CONTRACT_FILE][CONTRACT_NAME]["abi"]
 
+
+"""
+Call contract
+"""
 
 simple_storage_contract = read_a_contract_file(CONTRACT_FILE)
 compiled_sol = compile_contract(simple_storage_contract)
