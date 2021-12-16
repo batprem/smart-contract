@@ -1,0 +1,4 @@
+# Grep environment from .env file
+dotenv: .env
+wallet:
+  from_key: ${OWNER_PRIVATE_KEY}
